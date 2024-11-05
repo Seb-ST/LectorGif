@@ -87,17 +87,3 @@ def save_metadata_to_txt(file_path, metadata):
         for key, value in metadata.items():
             file.write(f"{key}: {value}\n")
         file.write("\n" + "-" * 40 + "\n")
-
-def recolectar_gifs(direccion_carpeta):
-    gifs = []
-    
-    def explorar_carpeta(carpeta):
-        for elemento in os.listdir(carpeta):
-            ruta_completa = os.path.join(carpeta, elemento)
-            if os.path.isfile(ruta_completa) and ruta_completa.endswith('.gif'):
-                gifs.append(ruta_completa)
-            elif os.path.isdir(ruta_completa):
-                explorar_carpeta(ruta_completa)
-    
-    explorar_carpeta(direccion_carpeta)
-    return gifs

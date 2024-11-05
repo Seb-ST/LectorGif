@@ -4,7 +4,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 from tkinter import ttk
 from PIL import Image, ImageTk
-from procesamiento_gif import parse_gif_metadata, save_metadata_to_txt
+from lectorgif import parse_gif_metadata, save_metadata_to_txt
 
 # Variables globales
 metadata_entries = {}
@@ -18,12 +18,27 @@ def open_folder():
         process_folder(folder_path)
 
 
+def recolectar_gifs(ruta_carpeta):
+    gifs = []
+
+    def buscar_gifs(carpeta):
+        # Recorre cada elemento en la carpeta actual
+        for elemento in os.listdir(carpeta):
+            ruta_completa = os.path.join(carpeta, elemento)
+            # Si es un archivo y termina en .gif, lo agrega a la lista
+            if os.path.isfile(ruta_completa) and ruta_completa.endswith('.gif'):
+                gifs.append(ruta_completa)
+            # Si es una carpeta, llama a la función recursivamente
+            elif os.path.isdir(ruta_completa):
+                buscar_gifs(ruta_completa)
+
+    # Inicia la búsqueda en la carpeta dada
+    buscar_gifs(ruta_carpeta)
+    return gifs
+
+
 def process_folder(folder_path):
-    gif_files = []
-    for root, _, files in os.walk(folder_path):
-        for file in files:
-            if file.lower().endswith('.gif'):
-                gif_files.append(os.path.join(root, file))
+    gif_files = recolectar_gifs(folder_path)
     listbox.delete(0, tk.END)
     for gif in gif_files:
         listbox.insert(tk.END, gif)

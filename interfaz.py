@@ -4,7 +4,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 from tkinter import ttk
 from PIL import Image, ImageTk
-from lectorgif import parse_gif_metadata, save_metadata_to_txt
+from procesamiento_gif import parse_gif_metadata, save_metadata_to_txt
 
 # Variables globales
 metadata_entries = {}
@@ -45,8 +45,12 @@ def process_folder(folder_path):
 
 
 def load_metadata():
-    selected_file = listbox.get(listbox.curselection())
     try:
+        selected_index = listbox.curselection()
+        if not selected_index:  # Verificar si no hay selección
+            messagebox.showwarning("Advertencia", "Por favor, selecciona un archivo GIF de la lista.")
+            return
+        selected_file = listbox.get(selected_index)
         metadata = parse_gif_metadata(selected_file)
         display_metadata(metadata)
         display_preview(selected_file)
@@ -61,7 +65,11 @@ def display_metadata(metadata):
 
 
 def save_metadata():
-    selected_file = listbox.get(listbox.curselection())
+    selected_index = listbox.curselection()
+    if not selected_index:
+        messagebox.showwarning("Advertencia", "Por favor, selecciona un archivo GIF de la lista para guardar los cambios.")
+        return
+    selected_file = listbox.get(selected_index)
     metadata = {key: entry.get() for key, entry in metadata_entries.items()}
     save_path = 'metadatos.txt'
     try:
